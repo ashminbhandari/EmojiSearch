@@ -7,17 +7,10 @@ document.addEventListener('keydown', event => {
         triggerEmojiSearch(event);
         return;
     }
-
     const key = event.key.toLowerCase();
-
     if (searchActivator.indexOf(key) === -1) return;
-
-    if (key == searchActivator.charAt(currIndex)) {
-        currIndex++;
-    } else {
-        currIndex = 0;
-    }
-
+    if (key == searchActivator.charAt(currIndex)) currIndex++;
+    else currIndex = 0;
     if (currIndex == 4) {
         currIndex = 0;
         if (isActiveElementTextInput(document.activeElement)) {
@@ -45,9 +38,7 @@ let searchKeyword = "";
 
 function triggerEmojiSearch(event) {
     let validKeys = "abcdefghijklmnopqrstuvwxyz:";
-
     const key = event.key.toLowerCase();
-
     if (event.keyCode == 8 || event.charCode == 8) {
         searchKeyword = searchKeyword.substring(0, searchKeyword.length - 1);
         return;
@@ -60,7 +51,6 @@ function triggerEmojiSearch(event) {
         searchActivated = false;
         return;
     }
-
     searchKeyword = searchKeyword + key;
 }
 
