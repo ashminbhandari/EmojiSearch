@@ -27,10 +27,14 @@ document.addEventListener('keydown', event => {
 });
 
 function injectEmoji(emoji) {
-    console.log("here");
-    console.log(document.activeElement.value);
-    console.log(searchActivator + searchKeyword + ":", emoji);
-    document.activeElement.value = document.activeElement.value.replaceAll(searchActivator + searchKeyword + ":", emoji);
+    document.activeElement.select();
+    document.execCommand('cut');
+    navigator.clipboard.readText().then((data) => {
+        data = data.replaceAll(searchActivator + searchKeyword + ":", emoji);
+        navigator.clipboard.writeText(data).then(() => {
+            document.execCommand('paste');
+        });
+    })
 }
 
 function emojiSearch(keyword) {
