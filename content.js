@@ -2,6 +2,14 @@ let currIndex = 0;
 let searchActivated = false;
 const searchActivator = 'emo:';
 
+function isActiveElementTextInput(activeElement) {
+    return activeElement instanceof HTMLInputElement &&
+        activeElement.type == 'text' ||
+        activeElement.type == 'textarea' ||
+        activeElement.type == 'search' ||
+        activeElement.type == 'input';
+}
+
 document.addEventListener('keydown', event => {
     if (searchActivated) {
         triggerEmojiSearch(event);
@@ -13,31 +21,32 @@ document.addEventListener('keydown', event => {
     else currIndex = 0;
     if (currIndex == 4) {
         currIndex = 0;
-        if (isActiveElementTextInput(document.activeElement)) {
-            console.log("search activated");
-            searchActivated = true;
-        }
+        searchActivated = true;
+        searchKeyword = "";
     }
 });
 
-function isActiveElementTextInput(activeElement) {
-    return activeElement instanceof HTMLInputElement &&
-        activeElement.type == 'text' ||
-        activeElement.type == 'textarea' ||
-        activeElement.type == 'search';
+function injectEmoji(emoji) {
+    console.log("here");
+    console.log(document.activeElement.value);
+    console.log(searchActivator + searchKeyword + ":", emoji);
+    document.activeElement.value = document.activeElement.value.replaceAll(searchActivator + searchKeyword + ":", emoji);
 }
 
 function emojiSearch(keyword) {
     let api = `https://emoji-api.com/emojis?search=${keyword}&access_key=7c90059a85bb007d521847db55fd3505d86454cd`;
     fetch(api)
         .then(response => response.json())
-        .then(data => console.log(data));
+        .then(data => {
+            if (data) injectEmoji(data[0].character);
+            else injectEmoji(" ");
+        })
 }
 
 let searchKeyword = "";
 
 function triggerEmojiSearch(event) {
-    let validKeys = "abcdefghijklmnopqrstuvwxyz:";
+    let validKeys = "abcdefghijklmnopqrstuvwxyz: ";
     const key = event.key.toLowerCase();
     if (event.keyCode == 8 || event.charCode == 8) {
         searchKeyword = searchKeyword.substring(0, searchKeyword.length - 1);
@@ -47,7 +56,6 @@ function triggerEmojiSearch(event) {
     } else if (key == ":" || searchKeyword.length == 15) {
         console.log("Searching for " + searchKeyword);
         emojiSearch(searchKeyword);
-        searchKeyword = "";
         searchActivated = false;
         return;
     }
