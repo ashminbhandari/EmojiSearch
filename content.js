@@ -42,6 +42,7 @@ function emojiSearch(keyword) {
 }
 
 let searchKeyword = "";
+
 function triggerEmojiSearch(event) {
     let validKeys = "abcdefghijklmnopqrstuvwxyz:";
 
@@ -50,14 +51,16 @@ function triggerEmojiSearch(event) {
     if (event.keyCode == 8 || event.charCode == 8) {
         searchKeyword = searchKeyword.substring(0, searchKeyword.length - 1);
         return;
-    } else if (validKeys.indexOf(key) === -1) return;
-
-    if (key != ":") searchKeyword = searchKeyword + key;
-    else if (key == ":" || searchKeyword.length == 15) {
+    } else if (validKeys.indexOf(key) === -1) {
+        return;
+    } else if (key == ":" || searchKeyword.length == 15) {
         console.log("Searching for " + searchKeyword);
         emojiSearch(searchKeyword);
-        searchKeyword="";
-        searchActivated=false;
+        searchKeyword = "";
+        searchActivated = false;
+        return;
     }
+
+    searchKeyword = searchKeyword + key;
 }
 
