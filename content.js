@@ -73,30 +73,19 @@ function emojiSelector(emojis) {
     if(emojiSelector) {
         emojiSelector.parentNode.removeChild(emojiSelector);
     }
-
     //Create one new each time
     let div = document.createElement("div");
     div.id = "emojiSelector";
     document.body.appendChild(div);
-
-    setEmojiSelectorDivStyle(div);
-
+    centerDiv(div);
     for (let i = 0; i < emojis.length && i < 10; i++) {
-
-        let p = document.createElement('p');
-        p.innerText = emojis[i].character;
-        let sup = document.createElement('sup');
-        sup.innerText = i;
-        sup.style.margin = '10px';
-        sup.style.fontSize = '15px';
-        p.appendChild(sup);
-        p.style.margin = '10px';
+        let p = paragraphWithSuperset(emojis[i].character, i);
         div.appendChild(p);
     }
 }
 
 //emoji selector styles set
-function setEmojiSelectorDivStyle(div) {
+function centerDiv(div) {
     div.style.zIndex = Number.MAX_SAFE_INTEGER.toString(2);
     div.style.position = 'fixed';
     div.style.top = '50%';
@@ -109,4 +98,17 @@ function setEmojiSelectorDivStyle(div) {
     div.style.display = 'flex';
     div.style.flexDirection = 'row';
     div.style.justifyContent = 'space-between';
+}
+
+//for to create emojis with supersetted nums
+function paragraphWithSuperset(paraText, superSetText) {
+    let p = document.createElement('p');
+    p.innerText = paraText;
+    let sup = document.createElement('sup');
+    sup.innerText = superSetText;
+    sup.style.margin = '10px';
+    sup.style.fontSize = '15px';
+    p.appendChild(sup);
+    p.style.margin = '10px';
+    return p;
 }
