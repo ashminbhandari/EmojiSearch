@@ -41,7 +41,9 @@ function emojiSearch(keyword) {
     fetch(api)
         .then(response => response.json())
         .then(data => {
-            if (data) injectEmoji(data[0].character);
+            if (data) {
+                emojiSelector(data);
+            }
             else injectEmoji("");
         })
         .catch(() => {
@@ -65,7 +67,46 @@ function injectEmoji(emoji) {
     searchKeyword = "";
 }
 
+function emojiSelector(emojis) {
+    //Check if exists already, remove if does
+    let emojiSelector = document.getElementById("emojiSelector");
+    if(emojiSelector) {
+        emojiSelector.parentNode.removeChild(emojiSelector);
+    }
 
+    //Create one new each time
+    let div = document.createElement("div");
+    div.id = "emojiSelector";
+    document.body.appendChild(div);
 
+    setEmojiSelectorDivStyle(div);
 
+    for (let i = 0; i < emojis.length && i < 10; i++) {
 
+        let p = document.createElement('p');
+        p.innerText = emojis[i].character;
+        let sup = document.createElement('sup');
+        sup.innerText = i;
+        sup.style.margin = '10px';
+        sup.style.fontSize = '15px';
+        p.appendChild(sup);
+        p.style.margin = '10px';
+        div.appendChild(p);
+    }
+}
+
+//emoji selector styles set
+function setEmojiSelectorDivStyle(div) {
+    div.style.zIndex = Number.MAX_SAFE_INTEGER.toString(2);
+    div.style.position = 'fixed';
+    div.style.top = '50%';
+    div.style.right = "50%";
+    div.style.padding = '10px';
+    div.style.color = 'white';
+    div.style.background = 'rgba(0, 0, 0, 0.7)';
+    div.style.fontSize = '30px';
+    div.style.borderRadius = '10px';
+    div.style.display = 'flex';
+    div.style.flexDirection = 'row';
+    div.style.justifyContent = 'space-between';
+}
