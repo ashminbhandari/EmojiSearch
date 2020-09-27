@@ -1,3 +1,5 @@
+let globalEmojiState;
+
 //recursive util to find the deepest child
 function findDeepestChild(parent) {
     if (!parent.lastElementChild) return parent;
@@ -6,10 +8,12 @@ function findDeepestChild(parent) {
 
 //add event listener to keydown events
 let searchActivated = false;
+let emojiSelectionWizard = false;
 const searchActivator = ':';
 document.addEventListener('keydown', event => {
-    if (searchActivated) {
-        triggerEmojiSearch(event);
+    if (searchActivated || emojiSelectionWizard) {
+        if(searchActivated) triggerEmojiSearch(event);
+        else if(emojiSelectionWizard) whichEmoji(event);
         return;
     }
     const key = event.key.toLowerCase();
@@ -42,6 +46,9 @@ function emojiSearch(keyword) {
         .then(response => response.json())
         .then(data => {
             if (data) {
+                globalEmojiState = data;
+                emojiSelectionWizard = true;
+                searchActivated = false;
                 emojiSelector(data);
             }
             else injectEmoji("");
@@ -82,7 +89,9 @@ function emojiSelector(emojis) {
         let p = paragraphWithSuperset(emojis[i].character, i);
         div.appendChild(p);
     }
+    $(emojiSelector).fadeOut(5000);
 }
+
 
 //emoji selector styles set
 function centerDiv(div) {
@@ -111,4 +120,11 @@ function paragraphWithSuperset(paraText, superSetText) {
     p.appendChild(sup);
     p.style.margin = '10px';
     return p;
+}
+
+//which emoji chosen
+function whichEmoji(event) {
+    let validKeys = "0123456789";
+    if (validKeys.indexOf(event.key) === -1) return;
+    injectEmoji(globalEmojiState[event.key].character);
 }
