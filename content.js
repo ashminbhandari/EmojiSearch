@@ -6,6 +6,13 @@ function findDeepestChild(parent) {
     return findDeepestChild(parent.lastElementChild);
 }
 
+//delete element util
+function deleteElement(elem) {
+    if(elem) {
+        elem.parentNode.removeChild(elem);
+    }
+}
+
 //add event listener to keydown events
 let searchActivated = false;
 let emojiSelectionWizard = false;
@@ -66,10 +73,9 @@ function emojiSearch(keyword) {
 //instagram comments and such
 function injectEmoji(emoji) {
     emojiSelectionWizard = false;
+    //clear selector, since emoji injected
     let emojiSelector = document.getElementById("emojiSelector");
-    if(emojiSelector) {
-        emojiSelector.parentNode.removeChild(emojiSelector);
-    }
+    deleteElement(emojiSelector);
     let deepestChild = findDeepestChild(document.activeElement);
     if (deepestChild.value) {
         $(deepestChild).val(function (index, value) {
@@ -86,9 +92,7 @@ function injectEmoji(emoji) {
 function emojiSelector(emojis) {
     //Check if exists already, remove if does
     let emojiSelector = document.getElementById("emojiSelector");
-    if(emojiSelector) {
-        emojiSelector.parentNode.removeChild(emojiSelector);
-    }
+    deleteElement(emojiSelector);
     //Create one new each time
     let div = document.createElement("div");
     div.id = "emojiSelector";
