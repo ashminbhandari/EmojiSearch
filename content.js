@@ -11,6 +11,11 @@ let searchActivated = false;
 let emojiSelectionWizard = false;
 const searchActivator = ':';
 document.addEventListener('keydown', event => {
+    if(event.keyCode == 27 || event.charCode == 27) {
+        event.preventDefault();
+        injectEmoji('');
+
+    }
     if (searchActivated || emojiSelectionWizard) {
         if(searchActivated) triggerEmojiSearch(event);
         else if(emojiSelectionWizard) whichEmoji(event);
@@ -48,8 +53,7 @@ function emojiSearch(keyword) {
             if (data) {
                 globalEmojiState = data;
                 emojiSelectionWizard = true;
-                searchActivated = false;
-                emojiSelector(data);
+                emojiSelector(globalEmojiState);
             }
             else injectEmoji("");
         })
@@ -61,6 +65,11 @@ function emojiSearch(keyword) {
 //inject emoji into dom element using jquery, using javascript doesn't work properly for websites like messenger,
 //instagram comments and such
 function injectEmoji(emoji) {
+    emojiSelectionWizard = false;
+    let emojiSelector = document.getElementById("emojiSelector");
+    if(emojiSelector) {
+        emojiSelector.parentNode.removeChild(emojiSelector);
+    }
     let deepestChild = findDeepestChild(document.activeElement);
     if (deepestChild.value) {
         $(deepestChild).val(function (index, value) {
@@ -89,7 +98,8 @@ function emojiSelector(emojis) {
         let p = paragraphWithSuperset(emojis[i].character, i);
         div.appendChild(p);
     }
-    $(emojiSelector).fadeOut(5000);
+    let p = paragraphWithSuperset('', 'esc');
+    div.appendChild(p);
 }
 
 
@@ -97,13 +107,12 @@ function emojiSelector(emojis) {
 function centerDiv(div) {
     div.style.zIndex = Number.MAX_SAFE_INTEGER.toString(2);
     div.style.position = 'fixed';
-    div.style.top = '50%';
-    div.style.right = "50%";
     div.style.padding = '10px';
+    div.style.top = 0;
+    div.style.right = 0;
     div.style.color = 'white';
     div.style.background = 'rgba(0, 0, 0, 0.7)';
     div.style.fontSize = '30px';
-    div.style.borderRadius = '10px';
     div.style.display = 'flex';
     div.style.flexDirection = 'row';
     div.style.justifyContent = 'space-between';
@@ -126,5 +135,6 @@ function paragraphWithSuperset(paraText, superSetText) {
 function whichEmoji(event) {
     let validKeys = "0123456789";
     if (validKeys.indexOf(event.key) === -1) return;
+    event.preventDefault();
     injectEmoji(globalEmojiState[event.key].character);
 }
