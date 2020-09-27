@@ -1,13 +1,13 @@
 let globalEmojiState;
 
 //recursive util to find the deepest child
-function findDeepestChild(parent) {
+const findDeepestChild = (parent) => {
     if (!parent.lastElementChild) return parent;
     return findDeepestChild(parent.lastElementChild);
 }
 
 //delete element util
-function deleteElement(elem) {
+const deleteElement = (elem) => {
     if(elem) {
         elem.parentNode.removeChild(elem);
     }
@@ -35,7 +35,7 @@ document.addEventListener('keydown', event => {
 
 //begin recording for search keyword
 let searchKeyword = "";
-function triggerEmojiSearch(event) {
+const triggerEmojiSearch = (event) => {
     let validKeys = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz: ";
     const key = event.key.toLowerCase();
     if (event.keyCode == 8 || event.charCode == 8) {
@@ -52,7 +52,7 @@ function triggerEmojiSearch(event) {
 }
 
 //call emoji api to map keyword to emoji - may have to use own implementation here
-function emojiSearch(keyword) {
+const emojiSearch = (keyword) => {
     let api = `https://emoji-api.com/emojis?search=${keyword}&access_key=7c90059a85bb007d521847db55fd3505d86454cd`;
     fetch(api)
         .then(response => response.json())
@@ -71,7 +71,7 @@ function emojiSearch(keyword) {
 
 //inject emoji into dom element using jquery, using javascript doesn't work properly for websites like messenger,
 //instagram comments and such
-function injectEmoji(emoji) {
+const injectEmoji = (emoji) => {
     emojiSelectionWizard = false;
     //clear selector, since emoji injected
     let emojiSelector = document.getElementById("emojiSelector");
@@ -89,7 +89,7 @@ function injectEmoji(emoji) {
     searchKeyword = "";
 }
 
-function emojiSelector(emojis) {
+const emojiSelector = (emojis) => {
     //Check if exists already, remove if does
     let emojiSelector = document.getElementById("emojiSelector");
     deleteElement(emojiSelector);
@@ -108,7 +108,7 @@ function emojiSelector(emojis) {
 
 
 //emoji selector styles set
-function centerDiv(div) {
+const centerDiv = (div) => {
     div.style.zIndex = Number.MAX_SAFE_INTEGER.toString(2);
     div.style.position = 'fixed';
     div.style.padding = '10px';
@@ -123,7 +123,7 @@ function centerDiv(div) {
 }
 
 //for to create emojis with supersetted nums
-function paragraphWithSuperset(paraText, superSetText) {
+const paragraphWithSuperset = (paraText, superSetText) => {
     let p = document.createElement('p');
     p.innerText = paraText;
     let sup = document.createElement('sup');
@@ -136,7 +136,7 @@ function paragraphWithSuperset(paraText, superSetText) {
 }
 
 //which emoji chosen
-function whichEmoji(event) {
+const whichEmoji = (event) => {
     let validKeys = "0123456789";
     if (validKeys.indexOf(event.key) === -1) return;
     event.preventDefault();
